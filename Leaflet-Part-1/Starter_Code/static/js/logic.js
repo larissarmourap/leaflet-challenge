@@ -1,17 +1,7 @@
 
 
-// Store our API endpoint inside queryUrl
-let queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
-
-
-// Perform a GET request to the query URL
-d3.json(queryUrl, function(data) {
-  // Once we get a response, send the data.features object to the createFeatures function
-  createFeatures(data.features);
-});
-
 // Creating the map object
-const map = L.map('map').setView([0, 0], 2);
+let map = L.map('map').setView([0, 0], 2);
 
 // Adding a tile layer 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -37,7 +27,7 @@ function chooseColor(depth) {
 };
 
 
-// Fetch and plot earthquakes
+// fetch API earthquakes
 fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson')
     .then(response => {
         if (!response.ok) {
@@ -46,15 +36,15 @@ fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojso
         return response.json();
     })
     .then(data => {
-        const earthquakes = data.features;
+        let earthquakes = data.features;
         earthquakes.forEach(eq => {
-            const coords = eq.geometry.coordinates;
-            const lat = coords[1];
-            const lng = coords[0];
-            const depth = coords[2];
-            const mag = eq.properties.mag;
-            const place = eq.properties.place;
-            const time = new Date(eq.properties.time).toLocaleString();
+            let coords = eq.geometry.coordinates;
+            let lat = coords[1];
+            let lng = coords[0];
+            let depth = coords[2];
+            let mag = eq.properties.mag;
+            let place = eq.properties.place;
+            let time = new Date(eq.properties.time).toLocaleString();
 
             // Create a latitude and longitute circle marker based on the earthquake's
             L.circle([lat, lng], {
@@ -72,7 +62,7 @@ fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojso
 
 
     // Create a legend for the map that explain the depth color coding
-    const legend = L.control({position: 'bottomright'});
+    let legend = L.control({position: 'bottomright'});
 legend.onAdd = function (map) {
     let div = L.DomUtil.create('div', 'info legend'),
         depths = [-10, 10, 30, 50, 70, 90],
@@ -98,4 +88,3 @@ legend.onAdd = function (map) {
 
   // Adding the legend to the map
 legend.addTo(map);
-
